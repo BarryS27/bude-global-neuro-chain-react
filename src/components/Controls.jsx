@@ -22,6 +22,23 @@ const Controls = React.memo(({
     setShowExportMenu(false);
   };
 
+  const handleExportSVG = () => {
+    exportToSVG(canvasRef, 'bude-global-neuro-chain.svg');
+    setShowExportMenu(false);
+  };
+
+  const handleShareLink = async () => {
+    const link = generateShareLink({ nodes, edges, clusters, camera, zoom });
+    try {
+        await navigator.clipboard.writeText(link);
+        alert('Share link copied to clipboard!'); // Or use a toast notification if available
+    } catch (err) {
+        console.error('Failed to copy link:', err);
+        // Fallback or error handling
+    }
+    setShowExportMenu(false);
+  };
+
   const [isMuted, setIsMuted] = useState(!soundManager.enabled);
 
   const handleToggleMute = () => {

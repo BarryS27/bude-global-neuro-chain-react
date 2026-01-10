@@ -1,0 +1,7 @@
+{
+  "name": "bude-global-neuro-chain",
+  "compatibility_date": "2026-01-10",
+  "assets": {
+    "directory": "./dist"
+  }
+}
