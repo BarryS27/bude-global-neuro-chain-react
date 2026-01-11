@@ -99,6 +99,16 @@ The history of innovation is fully editable via `src/data/`.
 }
 ```
 
+### Cluster Definition (`clusters.json`)
+```json
+{
+  "information": {
+    "label": "Information Age",
+    "color": "#2563eb"
+  }
+}
+```
+
 ---
 
 ## 📦 Installation
@@ -152,20 +162,28 @@ Deploy the `dist/` folder to **GitHub Pages**, **Vercel**, **Netlify**, or **Clo
 
 ---
 
-## 🤝 Contributing
+## 🤝 How to Contribute
 
-**We want YOU to build the future of visualization.**
+**We want YOU to build the future of visualization.** Neuro-Chain is open source and beginner-friendly.
 
-1.  **Fork** the repository.
-2.  **Create** a feature branch (`git checkout -b feature/AmazingTheme`).
-3.  **Commit** your changes (`git commit -m 'Add AmazingTheme'`).
-4.  **Push** to the branch (`git push origin feature/AmazingTheme`).
-5.  **Open** a Pull Request.
+### Option A: The "Historian" (No Code)
+1.  Open `src/data/nodes.json`.
+2.  Add a missing invention (e.g., "Quantum Computing").
+3.  Connect it in `edges.json`.
+4.  Submit a Pull Request!
 
-**Areas of Interest:**
-- New historical data points (fill the gaps!)
-- Creative visual themes (`src/config/themes.js`)
-- Physics engine optimizations
+### Option B: The "Artist" (Creative)
+1.  Open `src/config/themes.js`.
+2.  Copy an existing theme.
+3.  Tweak colors and physics constants to create a new vibe (e.g., "Retrowave").
+4.  Submit your new theme!
+
+### Option C: The "Engineer" (Hardcore)
+1.  Dive into `src/components/CanvasNetwork.jsx`.
+2.  Optimize the physics engine or add WebGL support.
+3.  Add new interaction modes.
+
+**Need help?** Join our [WhatsApp Group](https://chat.whatsapp.com/JSa5qnGbqAE76DEav1KCK6) and ask!
 
 ---
 
