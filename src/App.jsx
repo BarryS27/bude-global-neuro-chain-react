@@ -8,9 +8,13 @@ import Controls from './components/Controls';
 import Tooltip from './components/Tooltip';
 import SearchBar from './components/SearchBar';
 import Footer from './components/Footer';
-import KeyboardHelp from './components/KeyboardHelp';
+import HelpModal from './components/HelpModal';
+import Onboarding from './components/Onboarding';
 import Minimap from './components/Minimap';
 import StatsPanel from './components/StatsPanel';
+import ViewSettings from './components/ViewSettings';
+import DetailPanel from './components/DetailPanel';
+import TimelineControl from './components/TimelineControl';
 import ErrorBoundary from './components/ErrorBoundary';
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
 import { config, validateEnv, debug } from './config/env';
@@ -37,9 +41,50 @@ function App() {
   });
   
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null); // Persistent selection for DetailPanel
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [animating, setAnimating] = useState(true);
   const [cameraTarget, setCameraTarget] = useState({ x: 0, y: 0 });
+  const [showSettings, setShowSettings] = useState(false);
+  const [searchState, setSearchState] = useState({ term: '', matchedIds: [] });
+  const [hiddenClusters, setHiddenClusters] = useState(new Set());
+  const [currentYear, setCurrentYear] = useState(2025); // Default to "Now"
+
+
+  const toggleClusterVisibility = (clusterId) => {
+    setHiddenClusters(prev => {
+      const next = new Set(prev);
+      if (next.has(clusterId)) {
+        next.delete(clusterId);
+      } else {
+        next.add(clusterId);
+      }
+      return next;
+    });
+  };
+  
+  // View Settings State
+  const [viewSettings, setViewSettings] = useState({
+    renderLabels: true,
+    renderGlow: true,
+    renderPulses: true,
+    theme: 'default'
+  });
+
+  const handleToggleViewSetting = (key) => {
+    setViewSettings(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const handleSetTheme = (theme) => {
+    setViewSettings(prev => ({
+      ...prev,
+      theme
+    }));
+  };
+
 
   const searchInputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -99,8 +144,7 @@ function App() {
 
   const handleNodeSelect = (node) => {
     setCameraTarget({ x: -node.x, y: -node.y });
-    setHoveredNode(node);
-    setTimeout(() => setHoveredNode(null), 2000);
+    setSelectedNode(node); // Set persistent selection
   };
 
   const handleMinimapNavigate = (worldX, worldY) => {
@@ -155,6 +199,10 @@ function App() {
         cameraTarget={cameraTarget}
         canvasRef={canvasRef}
         onNodeClick={handleNodeSelect}
+        viewSettings={viewSettings}
+        searchState={searchState}
+        hiddenClusters={hiddenClusters}
+        maxYear={currentYear}
       />
       
       <TitleBlock />
@@ -164,23 +212,36 @@ function App() {
         clusters={data.clusters}
         onNodeSelect={handleNodeSelect}
         inputRef={searchInputRef}
+        onSearchChange={setSearchState}
       />
       
       <Legend
         clusters={data.clusters}
         onFocusCluster={handleFocusCluster}
+        hiddenClusters={hiddenClusters}
+        onToggleCluster={toggleClusterVisibility}
       />
-      
-      <Panel
-        data={data}
-        onDataUpdate={handleDataUpdate}
-      />
+
+      {/* Show DetailPanel if selectedNode exists, otherwise show generic Panel */}
+      {selectedNode ? (
+        <DetailPanel 
+            node={selectedNode}
+            cluster={data.clusters[selectedNode.cluster]}
+            onClose={() => setSelectedNode(null)}
+        />
+      ) : (
+        <Panel 
+            data={data}
+            onDataUpdate={handleDataUpdate}
+        />
+      )}
       
       <Controls
         animating={animating}
         onResetView={handleResetView}
         onToggleAnimation={handleToggleAnimation}
         onExportData={handleExportData}
+        onToggleSettings={() => setShowSettings(!showSettings)}
         canvasRef={canvasRef}
         nodes={data.nodes}
         edges={data.edges}
@@ -188,12 +249,22 @@ function App() {
         camera={cameraTarget}
         zoom={1}
       />
+
+      {showSettings && (
+        <ViewSettings 
+            settings={viewSettings}
+            onToggleSetting={handleToggleViewSetting}
+            onSetTheme={handleSetTheme}
+            onClose={() => setShowSettings(false)}
+        />
+      )}
       
       <Tooltip
         hoveredNode={hoveredNode}
         mousePos={mousePos}
         clusters={data.clusters}
         edges={data.edges}
+        descriptions={data.descriptions}
       />
       
       <StatsPanel
@@ -210,7 +281,9 @@ function App() {
         onNavigate={handleMinimapNavigate}
       />
       
-      <KeyboardHelp />
+      <HelpModal />
+
+      <Onboarding />
       
       <Footer />
       

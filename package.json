@@ -1,7 +1,17 @@
 {
   "name": "neuro-chain-react",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
+  "description": "Innovation Network Visualization Platform - Visualizing the non-linear history of human technology from Fire to AGI.",
+  "keywords": [
+    "visualization",
+    "network-graph",
+    "innovation-history",
+    "react",
+    "canvas-api",
+    "physics-engine",
+    "bude-global"
+  ],
   "license": "GPL-3.0",
   "author": "Bude Global Enterprise",
   "type": "module",

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import styles from '../styles/components/Legend.module.css';
 
-const Legend = React.memo(({ clusters, onFocusCluster }) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
+const Legend = React.memo(({ clusters, onFocusCluster, hiddenClusters, onToggleCluster }) => {
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   const clusterEntries = useMemo(() => {
     return Object.entries(clusters);
@@ -14,26 +14,46 @@ const Legend = React.memo(({ clusters, onFocusCluster }) => {
         className={styles.legendHeader}
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
-        <span>CLUSTERS</span>
+        <span>EXPLORE CLUSTERS</span>
         <span className={styles.toggleIcon}>{isCollapsed ? '▲' : '▼'}</span>
       </div>
       
       {!isCollapsed && (
         <div className={styles.clusterList}>
-            {clusterEntries.map(([id, cluster]) => (
-                <div
-                key={id}
-                className={styles.legendItem}
-                onClick={() => onFocusCluster(id)}
-                data-cluster={id}
-                >
-                <span
-                    className={styles.legendDot}
-                    style={{ color: cluster.color }}
-                />
-                <span>{cluster.label}</span>
-                </div>
-            ))}
+            {clusterEntries.map(([id, cluster]) => {
+                const isHidden = hiddenClusters?.has(id);
+                return (
+                    <div
+                        key={id}
+                        className={`${styles.legendItem} ${isHidden ? styles.hidden : ''}`}
+                        title="Click name to focus, Eye to toggle visibility"
+                    >
+                        <div 
+                            className={styles.visibilityToggle}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleCluster && onToggleCluster(id);
+                            }}
+                        >
+                            {isHidden ? '○' : '●'}
+                        </div>
+                        
+                        <div 
+                            className={styles.legendContent}
+                            onClick={() => onFocusCluster(id)}
+                        >
+                            <span
+                                className={styles.legendDot}
+                                style={{ 
+                                    backgroundColor: isHidden ? '#333' : cluster.color,
+                                    boxShadow: isHidden ? 'none' : `0 0 8px ${cluster.color}`
+                                }}
+                            />
+                            <span>{cluster.label}</span>
+                        </div>
+                    </div>
+                );
+            })}
         </div>
       )}
     </div>
