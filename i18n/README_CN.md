@@ -1,6 +1,6 @@
 # Bude Global Neuro-Chain (创新神经链)
 
-简体中文 | [English](../README.md)
+[English](../README.md) | [தமிழ்](./README_TA.md) | [हिन्दी](./README_HI.md) | 简体中文 | [Español](./README_SP.md)
 > **从原始火种到通用智能：人类智慧的神经蓝图**
 
 **创新网络可视化平台**

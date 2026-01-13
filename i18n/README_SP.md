@@ -1,7 +1,6 @@
 # Bude Global Neuro-Chain
 
-[SPANISH](./i18n/README_SP.md) | English
-[简体中文](./i18n/README_CN.md) | English
+[English](../README.md) | [தமிழ்](./README_TA.md) | [हिन्दी](./README_HI.md) | [简体中文](./README_CN.md) | Español
 
 **Del fuego primitivo a la inteligencia universal: el plano neuronal de la ingeniosidad humana**
 **Plataforma de visualización de redes de innovación**
